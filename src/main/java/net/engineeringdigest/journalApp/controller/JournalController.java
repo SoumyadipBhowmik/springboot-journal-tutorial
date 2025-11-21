@@ -1,9 +1,9 @@
 package net.engineeringdigest.journalApp.controller;
 
+import lombok.AllArgsConstructor;
 import net.engineeringdigest.journalApp.entity.JournalEntry;
 import net.engineeringdigest.journalApp.service.JournalService;
 import org.bson.types.ObjectId;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -13,10 +13,10 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/journals")
+@AllArgsConstructor
 public class JournalController {
 
-    @Autowired
-    private JournalService journalService;
+    private final JournalService journalService;
 
     @PostMapping
     public ResponseEntity<JournalEntry> createJournalEntry(@RequestBody JournalEntry entry) {
