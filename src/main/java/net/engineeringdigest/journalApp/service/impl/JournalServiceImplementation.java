@@ -2,8 +2,10 @@ package net.engineeringdigest.journalApp.service.impl;
 
 import lombok.AllArgsConstructor;
 import net.engineeringdigest.journalApp.entity.JournalEntry;
+import net.engineeringdigest.journalApp.entity.User;
 import net.engineeringdigest.journalApp.repository.JournalRepository;
 import net.engineeringdigest.journalApp.service.JournalService;
+import net.engineeringdigest.journalApp.service.UserService;
 import org.bson.types.ObjectId;
 import org.springframework.stereotype.Service;
 
@@ -17,10 +19,14 @@ import java.util.Optional;
 public class JournalServiceImplementation implements JournalService {
 
     private final JournalRepository journalRepository;
+    private final UserService userService;
 
-    public JournalEntry createJournalEntry(JournalEntry entry) {
+    public void createJournalEntry(JournalEntry entry, String userName) {
+        User user = userService.findByUserName(userName);
         entry.setDate(LocalDateTime.now());
-        return journalRepository.save(entry);
+        JournalEntry saved = journalRepository.save(entry);
+        user.getJournalEntries().add(saved);
+        userService.createUser(user);
     }
 
     public List<JournalEntry> getAllJournalEntries() {
