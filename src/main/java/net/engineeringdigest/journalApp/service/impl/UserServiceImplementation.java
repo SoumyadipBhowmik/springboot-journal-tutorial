@@ -18,9 +18,7 @@ public class UserServiceImplementation implements UserService {
 
 
     @Override
-    public User createUser(User newUser) {
-        return userRepository.save(newUser);
-    }
+    public User createUser(User newUser) {return userRepository.save(newUser);}
 
     @Override
     public List<User> getAllUsers() {
@@ -41,8 +39,8 @@ public class UserServiceImplementation implements UserService {
     public User updateUserByUserName(String userName, User updatedUser) {
         User oldUserData = userRepository.findByUsername(userName);
         if (oldUserData != null) {
-            oldUserData.setUsername(updatedUser.getUsername() != null && !updatedUser.equals("") ? updatedUser.getUsername() : oldUserData.getUsername());
-            oldUserData.setPassword(updatedUser.getPassword() != null && !updatedUser.equals("") ? updatedUser.getPassword() : oldUserData.getPassword());
+            oldUserData.setUsername(!updatedUser.equals("") ? updatedUser.getUsername() : oldUserData.getUsername());
+            oldUserData.setPassword(!updatedUser.equals("") ? updatedUser.getPassword() : oldUserData.getPassword());
             return oldUserData;
         }
         return null;

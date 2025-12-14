@@ -49,19 +49,24 @@ public class JournalController {
                 .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
-//    @PutMapping("/{id}")
-//    public ResponseEntity<JournalEntry> updateJournalById(@PathVariable ObjectId id, @RequestBody JournalEntry journalEntry) {
-//        try {
-//            JournalEntry entry = journalService.createJournalEntry(journalService.updateJournalEntry(id, journalEntry), user);
-//            return new ResponseEntity<>(entry, HttpStatus.OK);
-//        } catch (Exception e) {
-//            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-//        }
-//    }
+    @DeleteMapping("/{userName}/{id}")
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<?> deleteJournalById(@PathVariable ObjectId id) {
-        journalService.deleteJournalEntryById(id);
+    public ResponseEntity<?> deleteJournalById(@PathVariable ObjectId id, @PathVariable String userName) {
+        journalService.deleteJournalEntryById(id, userName);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    @PutMapping("/{userName}/{id}")
+    public ResponseEntity<JournalEntry> updateJournalById(
+            @PathVariable ObjectId id,
+            @PathVariable String userName,
+            @RequestBody JournalEntry journalEntry
+    ) {
+        try {
+            JournalEntry entry = journalService.createJournalEntry(journalService.updateJournalEntry(id, journalEntry));
+            return new ResponseEntity<>(entry, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
     }
 }

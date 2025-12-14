@@ -29,6 +29,11 @@ public class JournalServiceImplementation implements JournalService {
         userService.createUser(user);
     }
 
+    @Override
+    public JournalEntry createJournalEntry(JournalEntry entry) {
+        return journalRepository.save(entry);
+    }
+
     public List<JournalEntry> getAllJournalEntries() {
         return journalRepository.findAll();
     }
@@ -37,7 +42,10 @@ public class JournalServiceImplementation implements JournalService {
         return journalRepository.findById(String.valueOf(id));
     }
 
-    public void deleteJournalEntryById(ObjectId id) {
+    public void deleteJournalEntryById(ObjectId id, String userName) {
+        User user = userService.findByUserName(userName);
+        user.getJournalEntries().removeIf(entry -> entry.getId().equals(id));
+        userService.createUser(user);
         journalRepository.deleteById(String.valueOf(id));
     }
 
@@ -45,7 +53,7 @@ public class JournalServiceImplementation implements JournalService {
         JournalEntry journalEntry = journalRepository
                 .findById(String.valueOf(id)).orElseThrow(() -> new NoSuchElementException("Not found"));
         if (journalEntry != null) {
-            journalEntry.setTitle(entry.getTitle() != null && !entry.equals("") ? entry.getTitle() : journalEntry.getTitle());
+            journalEntry.setTitle(!entry.equals("") ? entry.getTitle() : journalEntry.getTitle());
             journalEntry.setContent(entry.getContent() != null && !entry.equals("") ? entry.getContent() : journalEntry.getContent());
         }
         return journalEntry;
