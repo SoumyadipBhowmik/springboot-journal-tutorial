@@ -8,10 +8,15 @@ import java.util.Optional;
 
 public interface JournalService {
     public JournalEntry createJournalEntry(JournalEntry entry);
-    public void createJournalEntry(JournalEntry entry, String userName);
-    public List<JournalEntry> getAllJournalEntries();
+
+    public JournalEntry createJournalEntry(JournalEntry entry, String userName);
+
     public Optional<JournalEntry> getJournalEntryById(ObjectId id);
-    public void deleteJournalEntryById(ObjectId id, String userName);
+
+    public List<JournalEntry> findJournalEntriesByUsername(String userName);
+
+    public boolean deleteJournalEntryById(ObjectId id, String userName);
+
     public JournalEntry updateJournalEntry(ObjectId id, JournalEntry entry);
 
 }

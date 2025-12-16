@@ -7,22 +7,26 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
-@RequestMapping("/public")
 @AllArgsConstructor
-public class PublicController {
+@RequestMapping("/admin")
+public class AdminController {
 
     private final UserService userService;
 
-    @GetMapping
-    public ResponseEntity<String> healthCheck() {
-        return new ResponseEntity<>("OK", HttpStatus.OK);
+    @GetMapping("/all-users")
+    public ResponseEntity<List<User>> getAllUsers() {
+        List<User> allUsers = userService.getAllUsers();
+        if (!allUsers.isEmpty()) return new ResponseEntity<>(allUsers, HttpStatus.OK);
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
-    @PostMapping("/create-user")
-    public ResponseEntity<User> createUser(@RequestBody User user) {
+    @PostMapping("/create-admin-user")
+    public ResponseEntity<User> createAdminUser(@RequestBody User user) {
         try {
-            userService.createUser(user);
+            userService.createAdminUser(user);
             return new ResponseEntity<>(HttpStatus.CREATED);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);

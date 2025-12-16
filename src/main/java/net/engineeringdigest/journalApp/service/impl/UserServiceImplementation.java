@@ -9,6 +9,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -25,10 +26,21 @@ public class UserServiceImplementation implements UserService {
     }
 
     @Override
-    public User createUser(User user) {
+    public void createUser(User user) {
         user.setPassword(passwordEncoder(user.getPassword()));
         user.setRoles(Collections.singletonList("USER"));
-        return userRepository.save(user);
+        userRepository.save(user);
+    }
+
+    @Override
+    public void createAdminUser(User user) {
+        user.setPassword(passwordEncoder(user.getPassword()));
+        user.setRoles(Arrays.asList("USER", "ADMIN"));
+        userRepository.save(user);
+    }
+
+    public void saveUser(User user) {
+        userRepository.save(user);
     }
 
     @Override
