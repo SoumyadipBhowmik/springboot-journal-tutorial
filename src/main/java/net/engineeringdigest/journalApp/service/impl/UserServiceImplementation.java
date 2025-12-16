@@ -5,8 +5,11 @@ import net.engineeringdigest.journalApp.entity.User;
 import net.engineeringdigest.journalApp.repository.UserRepository;
 import net.engineeringdigest.journalApp.service.UserService;
 import org.bson.types.ObjectId;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -15,10 +18,14 @@ import java.util.Optional;
 public class UserServiceImplementation implements UserService {
 
     private final UserRepository userRepository;
-
+    private static final PasswordEncoder PASSWORD_ENCODER = new BCryptPasswordEncoder();
 
     @Override
-    public User createUser(User newUser) {return userRepository.save(newUser);}
+    public User createUser(User user) {
+        user.setPassword(PASSWORD_ENCODER.encode(user.getPassword()));
+        user.setRoles(Collections.singletonList("USER"));
+        return userRepository.save(user);
+    }
 
     @Override
     public List<User> getAllUsers() {

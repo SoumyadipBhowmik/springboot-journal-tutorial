@@ -8,6 +8,7 @@ import net.engineeringdigest.journalApp.service.JournalService;
 import net.engineeringdigest.journalApp.service.UserService;
 import org.bson.types.ObjectId;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -21,12 +22,18 @@ public class JournalServiceImplementation implements JournalService {
     private final JournalRepository journalRepository;
     private final UserService userService;
 
+    @Transactional
     public void createJournalEntry(JournalEntry entry, String userName) {
-        User user = userService.findByUserName(userName);
-        entry.setDate(LocalDateTime.now());
-        JournalEntry saved = journalRepository.save(entry);
-        user.getJournalEntries().add(saved);
-        userService.createUser(user);
+        try {
+            User user = userService.findByUserName(userName);
+            entry.setDate(LocalDateTime.now());
+            JournalEntry saved = journalRepository.save(entry);
+            user.getJournalEntries().add(saved);
+            userService.createUser(user);
+        } catch(Exception e) {
+            System.out.println(e);
+            throw new RuntimeException("An error occurred when trying to save journal for a user.", e);
+        }
     }
 
     @Override

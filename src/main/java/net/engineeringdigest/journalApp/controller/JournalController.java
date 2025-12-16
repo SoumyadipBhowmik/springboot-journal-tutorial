@@ -23,12 +23,8 @@ public class JournalController {
 
     @PostMapping("{userName}")
     public ResponseEntity<JournalEntry> createJournalEntryOfUser(@RequestBody JournalEntry entry, @PathVariable String userName) {
-        try {
-            journalService.createJournalEntry(entry, userName);
-            return new ResponseEntity<>(HttpStatus.CREATED);
-        } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
+        journalService.createJournalEntry(entry, userName);
+        return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
     @GetMapping("{userName}")
