@@ -7,21 +7,21 @@ import java.util.List;
 import java.util.Optional;
 
 public interface UserService {
-    public void createUser(User user);
+    void createUser(User user);
 
-    public void saveUser(User user);
+    void saveUser(User user);
 
-    public void createAdminUser(User user);
+    void createAdminUser(User user);
 
-    public List<User> getAllUsers();
+    List<User> getAllUsers();
 
-    public Optional<User> getUserById(ObjectId id);
+    Optional<User> getUserById(ObjectId id);
 
-    public User updateUserByUserName(String userName, User user);
+    User updateUserByUserName(String userName, User user);
 
-    public void deleteUserById(ObjectId id);
+    void deleteUserById(ObjectId id);
 
-    public void deleteByUsername(String userName);
+    void deleteByUsername(String userName);
 
-    public User findByUserName(String userName);
+    User findByUserName(String userName);
 }
