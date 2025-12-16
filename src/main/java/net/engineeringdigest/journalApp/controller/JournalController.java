@@ -8,6 +8,8 @@ import net.engineeringdigest.journalApp.service.UserService;
 import org.bson.types.ObjectId;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -21,14 +23,18 @@ public class JournalController {
     private final JournalService journalService;
     private final UserService userService;
 
-    @PostMapping("{userName}")
-    public ResponseEntity<JournalEntry> createJournalEntryOfUser(@RequestBody JournalEntry entry, @PathVariable String userName) {
+    @PostMapping
+    public ResponseEntity<JournalEntry> createJournalEntryOfUser(@RequestBody JournalEntry entry) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String userName = authentication.getName();
         journalService.createJournalEntry(entry, userName);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
-    @GetMapping("{userName}")
-    public ResponseEntity<List<JournalEntry>> getAllJournalEntriesOfUser(@PathVariable String userName) {
+    @GetMapping
+    public ResponseEntity<List<JournalEntry>> getAllJournalEntriesOfUser() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String userName = authentication.getName();
         User user = userService.findByUserName(userName);
         List<JournalEntry> allJournalEntries = user.getJournalEntries();
         if (allJournalEntries != null && !allJournalEntries.isEmpty()) {

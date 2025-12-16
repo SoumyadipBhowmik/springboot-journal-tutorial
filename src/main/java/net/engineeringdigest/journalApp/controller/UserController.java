@@ -6,9 +6,9 @@ import net.engineeringdigest.journalApp.service.UserService;
 import org.bson.types.ObjectId;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/users")
@@ -17,29 +17,12 @@ public class UserController {
 
     private final UserService userService;
 
-    @PostMapping
-    public ResponseEntity<User> createUser(@RequestBody User user) {
+    @PutMapping
+    public ResponseEntity<User> updateUserByUserName(@RequestBody User updateUser) {
         try {
-            User newUser = userService.createUser(user);
-            return new ResponseEntity<>(newUser, HttpStatus.CREATED);
-        } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
-    }
-
-    @GetMapping("/{id}")
-    public ResponseEntity<User> getUserById(@PathVariable ObjectId id) {
-        Optional<User> user = userService.getUserById(id);
-        return user
-                .map(value -> new ResponseEntity<>(value, HttpStatus.OK))
-                .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
-    }
-
-    @PutMapping("/{userName}")
-    public ResponseEntity<User> updateUserByUserName(@PathVariable String userName, @RequestBody User newUpdatedUser) {
-        try {
-            User user = userService.updateUserByUserName(userName, newUpdatedUser);
-            User updatedUser = userService.createUser(user);
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            String userName = authentication.getName();
+            User updatedUser = userService.updateUserByUserName(userName, updateUser);
             return new ResponseEntity<>(updatedUser, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
@@ -49,7 +32,9 @@ public class UserController {
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteUserById(@PathVariable ObjectId id) {
         try {
-            userService.deleteUserById(id);
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            String userName = authentication.getName();
+            userService.deleteByUsername(userName);
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);

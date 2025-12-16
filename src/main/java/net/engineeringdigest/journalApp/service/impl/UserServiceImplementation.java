@@ -20,9 +20,13 @@ public class UserServiceImplementation implements UserService {
     private final UserRepository userRepository;
     private static final PasswordEncoder PASSWORD_ENCODER = new BCryptPasswordEncoder();
 
+    public String passwordEncoder(String rawPassword) {
+        return PASSWORD_ENCODER.encode(rawPassword);
+    }
+
     @Override
     public User createUser(User user) {
-        user.setPassword(PASSWORD_ENCODER.encode(user.getPassword()));
+        user.setPassword(passwordEncoder(user.getPassword()));
         user.setRoles(Collections.singletonList("USER"));
         return userRepository.save(user);
     }
@@ -43,18 +47,21 @@ public class UserServiceImplementation implements UserService {
     }
 
     @Override
-    public User updateUserByUserName(String userName, User updatedUser) {
-        User oldUserData = userRepository.findByUsername(userName);
-        if (oldUserData != null) {
-            oldUserData.setUsername(!updatedUser.equals("") ? updatedUser.getUsername() : oldUserData.getUsername());
-            oldUserData.setPassword(!updatedUser.equals("") ? updatedUser.getPassword() : oldUserData.getPassword());
-            return oldUserData;
+    public User updateUserByUserName(String userName, User user) {
+        User userInDB = userRepository.findByUsername(userName);
+        if (!user.getPassword().isEmpty()) {
+            userInDB.setPassword(passwordEncoder(user.getPassword()));
         }
-        return null;
+        return userRepository.save(userInDB);
     }
 
     @Override
     public void deleteUserById(ObjectId id) {
         userRepository.deleteById(id);
+    }
+
+    @Override
+    public void deleteByUsername(String userName) {
+        userRepository.deleteByUsername(userName);
     }
 }
