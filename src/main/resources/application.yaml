@@ -3,6 +3,6 @@ spring:
     mongodb:
 #      host: localhost
 #      port: 27017
-      uri: mongodb+srv://SoumyadipBhowmik:LElaAM4TzgF0oFll@cluster0.qfhi6ig.mongodb.net/?appName=Cluster0
+      uri: {{MONGO_DATABASE_URL}}
       database: journaldb
       auto-index-creation: true
