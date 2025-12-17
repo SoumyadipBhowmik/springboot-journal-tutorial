@@ -1,8 +1,8 @@
-package net.engineeringdigest.journalApp.controller;
+package net.engineering.digest.journal.app.controller;
 
 import lombok.AllArgsConstructor;
-import net.engineeringdigest.journalApp.entity.User;
-import net.engineeringdigest.journalApp.service.UserService;
+import net.engineering.digest.journal.app.entity.User;
+import net.engineering.digest.journal.app.service.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

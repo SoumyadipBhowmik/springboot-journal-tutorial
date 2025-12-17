@@ -1,11 +1,12 @@
-package net.engineeringdigest.journalApp.service.impl;
+package net.engineering.digest.journal.app.service.impl;
 
 import lombok.AllArgsConstructor;
-import net.engineeringdigest.journalApp.entity.JournalEntry;
-import net.engineeringdigest.journalApp.entity.User;
-import net.engineeringdigest.journalApp.repository.JournalRepository;
-import net.engineeringdigest.journalApp.service.JournalService;
-import net.engineeringdigest.journalApp.service.UserService;
+import lombok.extern.slf4j.Slf4j;
+import net.engineering.digest.journal.app.entity.JournalEntry;
+import net.engineering.digest.journal.app.entity.User;
+import net.engineering.digest.journal.app.repository.JournalRepository;
+import net.engineering.digest.journal.app.service.JournalService;
+import net.engineering.digest.journal.app.service.UserService;
 import org.bson.types.ObjectId;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,6 +16,7 @@ import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 
+@Slf4j
 @Service
 @AllArgsConstructor
 public class JournalServiceImplementation implements JournalService {
@@ -32,6 +34,7 @@ public class JournalServiceImplementation implements JournalService {
             userService.saveUser(user);
             return saved;
         } catch (Exception e) {
+            log.warn("An error occurred when trying to save journal for a user.",  e);
             throw new RuntimeException("An error occurred when trying to save journal for a user.", e);
         }
     }
@@ -70,9 +73,13 @@ public class JournalServiceImplementation implements JournalService {
                 .findById(String.valueOf(id))
                 .orElseThrow(() -> new NoSuchElementException("Not found"));
         if (journalEntry != null) {
-            journalEntry.setTitle(!entry.getTitle().isEmpty() ? entry.getTitle() : journalEntry.getTitle());
+            journalEntry.setTitle(!entry.getTitle().isEmpty()
+                    ? entry.getTitle()
+                    : journalEntry.getTitle());
             journalEntry
-                    .setContent(entry.getContent() != null && !entry.getContent().isEmpty() ? entry.getContent() : journalEntry.getContent());
+                    .setContent(entry.getContent() != null && !entry.getContent().isEmpty()
+                            ? entry.getContent()
+                            : journalEntry.getContent());
         }
         return journalEntry;
     }

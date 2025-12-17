@@ -1,8 +1,8 @@
-package net.engineeringdigest.journalApp.service.impl;
+package net.engineering.digest.journal.app.service.impl;
 
 import lombok.AllArgsConstructor;
-import net.engineeringdigest.journalApp.entity.User;
-import net.engineeringdigest.journalApp.repository.UserRepository;
+import net.engineering.digest.journal.app.entity.User;
+import net.engineering.digest.journal.app.repository.UserRepository;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;

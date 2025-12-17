@@ -1,9 +1,10 @@
-package net.engineeringdigest.journalApp.service.impl;
+package net.engineering.digest.journal.app.service.impl;
 
 import lombok.AllArgsConstructor;
-import net.engineeringdigest.journalApp.entity.User;
-import net.engineeringdigest.journalApp.repository.UserRepository;
-import net.engineeringdigest.journalApp.service.UserService;
+import lombok.extern.slf4j.Slf4j;
+import net.engineering.digest.journal.app.entity.User;
+import net.engineering.digest.journal.app.repository.UserRepository;
+import net.engineering.digest.journal.app.service.UserService;
 import org.bson.types.ObjectId;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -14,6 +15,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
+@Slf4j
 @Service
 @AllArgsConstructor
 public class UserServiceImplementation implements UserService {
@@ -27,9 +29,14 @@ public class UserServiceImplementation implements UserService {
 
     @Override
     public void createUser(User user) {
-        user.setPassword(passwordEncoder(user.getPassword()));
-        user.setRoles(Collections.singletonList("USER"));
-        userRepository.save(user);
+        try {
+            user.setPassword(passwordEncoder(user.getPassword()));
+            user.setRoles(Collections.singletonList("USER"));
+            userRepository.save(user);
+        } catch (Exception e) {
+            log.warn("Error while creating user {}", user.getUsername(), e);
+            throw new RuntimeException("Error while creating user {}", e);
+        }
     }
 
     @Override

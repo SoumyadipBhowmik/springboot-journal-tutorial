@@ -1,10 +1,10 @@
-package net.engineeringdigest.journalApp.controller;
+package net.engineering.digest.journal.app.controller;
 
 import lombok.AllArgsConstructor;
-import net.engineeringdigest.journalApp.entity.JournalEntry;
-import net.engineeringdigest.journalApp.entity.User;
-import net.engineeringdigest.journalApp.service.JournalService;
-import net.engineeringdigest.journalApp.service.UserService;
+import net.engineering.digest.journal.app.entity.JournalEntry;
+import net.engineering.digest.journal.app.entity.User;
+import net.engineering.digest.journal.app.service.JournalService;
+import net.engineering.digest.journal.app.service.UserService;
 import org.bson.types.ObjectId;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -61,7 +61,7 @@ public class JournalController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> deleteJournalById(@PathVariable ObjectId id) {
+    public ResponseEntity<Void> deleteJournalById(@PathVariable ObjectId id) {
         String userName = SecurityContextHolder.getContext().getAuthentication().getName();
         boolean entry = journalService.deleteJournalEntryById(id, userName);
         if (entry) {

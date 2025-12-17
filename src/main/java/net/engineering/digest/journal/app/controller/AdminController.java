@@ -1,8 +1,8 @@
-package net.engineeringdigest.journalApp.controller;
+package net.engineering.digest.journal.app.controller;
 
 import lombok.AllArgsConstructor;
-import net.engineeringdigest.journalApp.entity.User;
-import net.engineeringdigest.journalApp.service.UserService;
+import net.engineering.digest.journal.app.entity.User;
+import net.engineering.digest.journal.app.service.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -19,8 +19,9 @@ public class AdminController {
     @GetMapping("/all-users")
     public ResponseEntity<List<User>> getAllUsers() {
         List<User> allUsers = userService.getAllUsers();
-        if (!allUsers.isEmpty()) return new ResponseEntity<>(allUsers, HttpStatus.OK);
-        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        return (!allUsers.isEmpty())
+                ? new ResponseEntity<>(allUsers, HttpStatus.OK)
+                : new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
     @PostMapping("/create-admin-user")

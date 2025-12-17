@@ -1,8 +1,8 @@
-package net.engineeringdigest.journalApp.config;
+package net.engineering.digest.journal.app.config;
 
 
 import lombok.AllArgsConstructor;
-import net.engineeringdigest.journalApp.service.impl.UserServiceDetailsImplementation;
+import net.engineering.digest.journal.app.service.impl.UserServiceDetailsImplementation;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationProvider;
@@ -19,7 +19,7 @@ import org.springframework.security.web.SecurityFilterChain;
 @AllArgsConstructor
 public class SecurityConfig {
 
-    UserServiceDetailsImplementation userDetails;
+    private final UserServiceDetailsImplementation userDetails;
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {

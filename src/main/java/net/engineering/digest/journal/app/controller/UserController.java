@@ -1,8 +1,8 @@
-package net.engineeringdigest.journalApp.controller;
+package net.engineering.digest.journal.app.controller;
 
 import lombok.AllArgsConstructor;
-import net.engineeringdigest.journalApp.entity.User;
-import net.engineeringdigest.journalApp.service.UserService;
+import net.engineering.digest.journal.app.entity.User;
+import net.engineering.digest.journal.app.service.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -29,7 +29,7 @@ public class UserController {
     }
 
     @DeleteMapping
-    public ResponseEntity<?> deleteUserById() {
+    public ResponseEntity<Void> deleteUserById() {
         try {
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
             String userName = authentication.getName();
