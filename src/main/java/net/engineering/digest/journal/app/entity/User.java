@@ -22,6 +22,9 @@ public class User {
     @NonNull
     private String username;
     @NonNull
+    private String email;
+    private boolean sentimentAnalysis;
+    @NonNull
     private String password;
     @DBRef
     private List<JournalEntry> journalEntries = new ArrayList<>();
