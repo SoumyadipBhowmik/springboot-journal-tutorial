@@ -1,6 +1,7 @@
 package net.engineering.digest.journal.app.controller;
 
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import net.engineering.digest.journal.app.api.response.WeatherResponse;
 import net.engineering.digest.journal.app.entity.User;
 import net.engineering.digest.journal.app.service.UserService;
@@ -11,6 +12,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
+@Slf4j
 @RestController
 @RequestMapping("/users")
 @AllArgsConstructor
@@ -49,7 +51,11 @@ public class UserController {
         ResponseEntity<WeatherResponse> weather = weatherService.getWeather("Bangalore");
         String greeting = "";
         if (weather != null && weather.getBody() != null) {
-            greeting = "Today's temperature is: " + weather.getBody().getCurrent().getTemperature();
+            try {
+                greeting = "Today's temperature is: " + weather.getBody().getCurrent().getTemperature();
+            } catch (Exception e) {
+                log.warn("Error fetching weather", e);
+            }
         }
         return new ResponseEntity<>("Hello, " + userName + ". " + greeting, HttpStatus.OK);
     }

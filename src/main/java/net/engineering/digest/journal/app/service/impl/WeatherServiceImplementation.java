@@ -1,24 +1,29 @@
 package net.engineering.digest.journal.app.service.impl;
 
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import net.engineering.digest.journal.app.api.response.WeatherResponse;
+import net.engineering.digest.journal.app.cache.AppCache;
+import net.engineering.digest.journal.app.constants.Placeholders;
 import net.engineering.digest.journal.app.service.WeatherService;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 @Service
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class WeatherServiceImplementation implements WeatherService {
 
-    private static final String API_KEY = "4bc381f8d78a220977883bde48bf8798";
-    private static final String API = "http://api.weatherstack.com/current?access_key=API_KEY&query=CITY";
-
-    private RestTemplate restTemplate;
+    @Value("${weather.api.key}")
+    private String apiKey;
+    private final RestTemplate restTemplate;
+    private final AppCache appCache;
 
     public ResponseEntity<WeatherResponse> getWeather(String city) {
-        String finalApi = API.replace("API_KEY", API_KEY).replace("CITY", city);
+        String finalApi = appCache.getCache().get(AppCache.keys.WEATHER_API.toString())
+                .replace(Placeholders.API_KEY, apiKey)
+                .replace(Placeholders.CITY, city);
         return restTemplate.exchange(finalApi, HttpMethod.GET, null, WeatherResponse.class);
     }
 }
