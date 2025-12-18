@@ -1,11 +1,13 @@
 package net.engineering.digest.journal.app.controller;
 
 import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.engineering.digest.journal.app.api.response.WeatherResponse;
 import net.engineering.digest.journal.app.entity.User;
 import net.engineering.digest.journal.app.service.UserService;
 import net.engineering.digest.journal.app.service.WeatherService;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -15,9 +17,11 @@ import org.springframework.web.bind.annotation.*;
 @Slf4j
 @RestController
 @RequestMapping("/users")
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class UserController {
 
+    @Value("${city.name}")
+    private String city;
     private final UserService userService;
     private final WeatherService weatherService;
 
@@ -48,7 +52,7 @@ public class UserController {
     @GetMapping
     public ResponseEntity<String> greetings() {
         String userName = SecurityContextHolder.getContext().getAuthentication().getName();
-        ResponseEntity<WeatherResponse> weather = weatherService.getWeather("Bangalore");
+        ResponseEntity<WeatherResponse> weather = weatherService.getWeather(city);
         String greeting = "";
         if (weather != null && weather.getBody() != null) {
             try {
