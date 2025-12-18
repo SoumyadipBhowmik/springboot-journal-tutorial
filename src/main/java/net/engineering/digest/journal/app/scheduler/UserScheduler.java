@@ -1,6 +1,7 @@
 package net.engineering.digest.journal.app.scheduler;
 
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import net.engineering.digest.journal.app.cache.AppCache;
 import net.engineering.digest.journal.app.entity.JournalEntry;
 import net.engineering.digest.journal.app.entity.User;
@@ -14,6 +15,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Slf4j
 @Component
 @AllArgsConstructor
 public class UserScheduler {
@@ -42,5 +44,6 @@ public class UserScheduler {
     @Scheduled(cron = "0 0/10 0 ? * *")
     public void clearAppCache() {
         appCache.init();
+        log.info("App cache cleared successfully");
     }
 }
