@@ -1,8 +1,10 @@
 package net.engineering.digest.journal.app.controller;
 
 import lombok.AllArgsConstructor;
+import net.engineering.digest.journal.app.api.response.WeatherResponse;
 import net.engineering.digest.journal.app.entity.User;
 import net.engineering.digest.journal.app.service.UserService;
+import net.engineering.digest.journal.app.service.WeatherService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -15,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 public class UserController {
 
     private final UserService userService;
+    private final WeatherService weatherService;
 
     @PutMapping
     public ResponseEntity<User> updateUserByUserName(@RequestBody User updateUser) {
@@ -39,4 +42,16 @@ public class UserController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
+
+    @GetMapping
+    public ResponseEntity<String> greetings() {
+        String userName = SecurityContextHolder.getContext().getAuthentication().getName();
+        ResponseEntity<WeatherResponse> weather = weatherService.getWeather("Bangalore");
+        String greeting = "";
+        if (weather != null && weather.getBody() != null) {
+            greeting = "Today's temperature is: " + weather.getBody().getCurrent().getTemperature();
+        }
+        return new ResponseEntity<>("Hello, " + userName + ". " + greeting, HttpStatus.OK);
+    }
+
 }
