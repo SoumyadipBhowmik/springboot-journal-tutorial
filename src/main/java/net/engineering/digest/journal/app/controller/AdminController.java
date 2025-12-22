@@ -5,11 +5,15 @@ import lombok.extern.slf4j.Slf4j;
 import net.engineering.digest.journal.app.cache.AppCache;
 import net.engineering.digest.journal.app.entity.User;
 import net.engineering.digest.journal.app.service.UserService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PagedResourcesAssembler;
+import org.springframework.hateoas.EntityModel;
+import org.springframework.hateoas.PagedModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @Slf4j
 @RestController
@@ -19,13 +23,18 @@ public class AdminController {
 
     private final UserService userService;
     private final AppCache appCache;
+    private final PagedResourcesAssembler<User> assembler;
 
     @GetMapping("/all-users")
-    public ResponseEntity<List<User>> getAllUsers() {
-        List<User> allUsers = userService.getAllUsers();
-        return (!allUsers.isEmpty())
-                ? new ResponseEntity<>(allUsers, HttpStatus.OK)
-                : new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    public ResponseEntity<PagedModel<EntityModel<User>>> getAllUsers(
+            @RequestParam(value = "page", defaultValue = "0") int page,
+            @RequestParam(value = "size", defaultValue = "1") int size
+    ) {
+
+        Pageable pageable = PageRequest.of(page, size);
+        Page<User> allUsers = userService.getAllUsers(pageable);
+
+        return ResponseEntity.ok(assembler.toModel(allUsers));
     }
 
     @PostMapping("/create-admin-user")
