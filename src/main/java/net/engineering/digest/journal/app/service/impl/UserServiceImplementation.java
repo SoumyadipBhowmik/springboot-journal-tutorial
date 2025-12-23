@@ -3,6 +3,7 @@ package net.engineering.digest.journal.app.service.impl;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.engineering.digest.journal.app.entity.User;
+import net.engineering.digest.journal.app.exception.CreateUserException;
 import net.engineering.digest.journal.app.repository.UserRepository;
 import net.engineering.digest.journal.app.service.UserService;
 import org.bson.types.ObjectId;
@@ -14,7 +15,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.List;
 import java.util.Optional;
 
 @Slf4j
@@ -36,16 +36,19 @@ public class UserServiceImplementation implements UserService {
             user.setRoles(Collections.singletonList("USER"));
             userRepository.save(user);
         } catch (Exception e) {
-            log.warn("Error while creating user {}", user.getUsername(), e);
-            throw new RuntimeException("Error while creating user {}", e);
+            throw new CreateUserException("Error while creating user:" + user.getUsername());
         }
     }
 
     @Override
     public void createAdminUser(User user) {
-        user.setPassword(passwordEncoder(user.getPassword()));
-        user.setRoles(Arrays.asList("USER", "ADMIN"));
-        userRepository.save(user);
+        try {
+            user.setPassword(passwordEncoder(user.getPassword()));
+            user.setRoles(Arrays.asList("USER", "ADMIN"));
+            userRepository.save(user);
+        } catch (Exception e) {
+            throw new CreateUserException("Error while creating admin user" + user.getUsername());
+        }
     }
 
     public void saveUser(User user) {

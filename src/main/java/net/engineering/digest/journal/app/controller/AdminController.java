@@ -33,18 +33,13 @@ public class AdminController {
 
         Pageable pageable = PageRequest.of(page, size);
         Page<User> allUsers = userService.getAllUsers(pageable);
-
         return ResponseEntity.ok(assembler.toModel(allUsers));
     }
 
     @PostMapping("/create-admin-user")
     public ResponseEntity<User> createAdminUser(@RequestBody User user) {
-        try {
             userService.createAdminUser(user);
             return new ResponseEntity<>(HttpStatus.CREATED);
-        } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
     }
 
     @PostMapping("/cache")
